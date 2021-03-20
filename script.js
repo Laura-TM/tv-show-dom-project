@@ -1,6 +1,14 @@
 // I had some guidance to create this function and avoid having global variables
 
-function initialiseElements() {
+function setup() {
+  createSearchInput();
+  createSelectionList();
+
+  const allEpisodes = getAllEpisodes();
+  makePageForEpisodes(allEpisodes);
+}
+
+function createSearchInput() {
   let headerElement = document.getElementsByTagName("header")[0];
   let inputElement = document.createElement("input");
   inputElement.classList.add("input");
@@ -14,10 +22,25 @@ function initialiseElements() {
   headerElement.appendChild(displayElement);
   displayElement.appendChild(paragraphElement);
   inputElement.addEventListener("input", searchEpisodes);
+}
 
+function formattedEpisode(episode, nameAtStart) {
+  let rootSeason = `${episode.season}`;
+  let rootEpisode = `${episode.number}`;
+  let paddedSeason = rootSeason.padStart(2, "0");
+  let paddedEpisode = rootEpisode.padStart(2, "0");
+  if (nameAtStart) {
+    return `${episode.name} - S${paddedSeason}E${paddedEpisode}`;
+  } else {
+    return `S${paddedSeason}E${paddedEpisode} - ${episode.name}`;
+  }
+}
+
+function createSelectionList() {
   let listOfEpisodes = getAllEpisodes();
   let selectList = document.createElement("select");
   selectList.classList.add("select");
+  let headerElement = document.getElementsByTagName("header")[0];
   headerElement.appendChild(selectList);
 
   // I had some help with getting a default option
@@ -28,22 +51,12 @@ function initialiseElements() {
 
   for (let episode of listOfEpisodes) {
     let option = document.createElement("option");
-    let rootSeason = `${episode.season}`;
-    let rootEpisode = `${episode.number}`;
-    let paddedSeason = rootSeason.padStart(2, "0");
-    let paddedEpisode = rootEpisode.padStart(2, "0");
+    option.text = formattedEpisode(episode, false);
     // I had help on the next line to understand that getting the indexOf was going to be useful
     option.value = listOfEpisodes.indexOf(episode);
-    option.text = `S${paddedSeason}E${paddedEpisode} - ${episode.name}`;
     selectList.appendChild(option);
   }
   selectList.addEventListener("change", selectOneEpisode);
-}
-
-function setup() {
-  initialiseElements();
-  const allEpisodes = getAllEpisodes();
-  makePageForEpisodes(allEpisodes);
 }
 
 // Level 100
@@ -63,11 +76,7 @@ function makePageForEpisodes(episodeList) {
     let nameContainer = document.createElement("div");
     nameContainer.classList.add("nameWrapper");
     parentContainer.appendChild(nameContainer);
-    let rootSeason = `${episode.season}`;
-    let rootEpisode = `${episode.number}`;
-    let paddedSeason = rootSeason.padStart(2, "0");
-    let paddedEpisode = rootEpisode.padStart(2, "0");
-    nameContainer.innerHTML = `${episode.name} - S${paddedSeason} E${paddedEpisode}`;
+    nameContainer.innerHTML = formattedEpisode(episode, true);
 
     let imageContainer = document.createElement("img");
     imageContainer.classList.add("imageWrapper");
