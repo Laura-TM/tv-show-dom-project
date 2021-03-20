@@ -53,8 +53,13 @@ body {
 .paragraph,
 .select,
 .option {
-  color: #ccc;
+  color: #a3a3a3;
   text-align: center;
+}
+
+.paragraph:empty:before {
+  content: attr(data-placeholder);
+  color: #a3a3a3;
 }
 
 ::placeholder {
@@ -142,6 +147,7 @@ footer a:active {
 }
 
 @media screen and (min-width: 600px) {
+  /* tablets */
   .display,
   .paragraph,
   .input,
@@ -170,9 +176,17 @@ footer a:active {
   .paragraph,
   .input,
   .select {
-    margin: 0px 20px;
-    font-size: 20px;
+    margin: 0px 15px;
+    font-size: 19px;
     border-radius: 7px;
+  }
+
+  .display {
+    width: 45%;
+  }
+  .input,
+  .select {
+    width: 30%;
   }
 
   .parent {

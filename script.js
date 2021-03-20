@@ -13,7 +13,6 @@ function makePageForEpisodes(episodeList) {
   rootElem.innerHTML = "";
   rootElem.style.backgroundColor = "#ADADC9";
 
-  console.log(`Got ${episodeList.length} episode(s)`);
   for (let episode of episodeList) {
     let parentContainer = document.createElement("div");
     parentContainer.classList.add("parentWrapper");
@@ -52,6 +51,7 @@ let displayElement = document.createElement("div");
 displayElement.classList.add("display");
 let paragraphElement = document.createElement("p");
 paragraphElement.classList.add("paragraph");
+paragraphElement.setAttribute("data-placeholder", "Full catalogue");
 headerElement.appendChild(inputElement);
 headerElement.appendChild(displayElement);
 displayElement.appendChild(paragraphElement);
@@ -78,22 +78,20 @@ function searchEpisodes() {
   }
   paragraphElement.innerHTML = `Displaying ${counter} / ${episodeList.length} episode(s)`;
   makePageForEpisodes(filteredEpisodes);
+  selectList.value = "Select/Reset an option";
 }
 inputElement.addEventListener("input", searchEpisodes);
-
-window.onload = setup;
 
 // Level 300
 let listOfEpisodes = getAllEpisodes();
 let selectList = document.createElement("select");
-selectList.id = "mySelect";
 selectList.classList.add("select");
 headerElement.appendChild(selectList);
 
 // I had some help with getting a default option
 let option = document.createElement("option");
 option.classList.add("option");
-option.textContent = "Select an option";
+option.textContent = "Select/Reset an option";
 selectList.appendChild(option);
 
 for (let episode of listOfEpisodes) {
@@ -109,16 +107,20 @@ for (let episode of listOfEpisodes) {
 }
 
 function selectOneEpisode() {
-  if (document.getElementById("mySelect").value === "Select an option") {
+  inputElement.value = "";
+  paragraphElement.innerHTML = `Displaying your selection`;
+  if (selectList.value === "Select/Reset an option") {
+    paragraphElement.innerHTML = `Full catalogue`;
     makePageForEpisodes(listOfEpisodes);
   } else {
     let selectedEpisode = [];
-    let index = document.getElementById("mySelect").value;
+    let index = selectList.value;
     // I had help on the next line, linked to the above 105 comment
     let episodeObject = listOfEpisodes[index];
     selectedEpisode.push(episodeObject);
     makePageForEpisodes(selectedEpisode);
   }
 }
-
 selectList.addEventListener("change", selectOneEpisode);
+
+window.onload = setup;
