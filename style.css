@@ -4,7 +4,7 @@
 }
 
 header {
-  height: 100px;
+  height: 130px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -15,6 +15,7 @@ header {
 
 body {
   margin: 0;
+  place-items: center;
 }
 
 #root {
@@ -36,14 +37,11 @@ body {
   font-weight: bold;
   width: 90%;
   font-size: 16px;
+  margin-bottom: 5px;
 }
 
 .input {
   color: rgb(31, 16, 30);
-}
-
-.display {
-  margin: 5px 10px;
 }
 
 .paragraph {
@@ -82,7 +80,7 @@ body {
   background-color: #e4e6eb;
   margin: 20px;
   padding: 20px;
-  height: 530px;
+  height: 480px;
   width: 90%;
   box-shadow: 0 2px 10px 1px rgba(0, 0, 0, 0.5);
 }
@@ -115,6 +113,11 @@ body {
 .textWrapper {
   color: rgb(53, 9, 50);
   text-align: center;
+  display: -webkit-box;
+  max-width: 100%;
+  -webkit-line-clamp: 7;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 footer {
@@ -154,10 +157,6 @@ footer a:active {
   .select {
     font-size: 18px;
   }
-
-  .parent {
-    height: 600px;
-  }
 }
 
 @media screen and (min-width: 900px) {
@@ -187,10 +186,6 @@ footer a:active {
   .input,
   .select {
     width: 30%;
-  }
-
-  .parent {
-    height: 550px;
   }
 }
 
