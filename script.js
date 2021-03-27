@@ -46,14 +46,20 @@ function makePageForEpisodes(episodeList) {
 
     let imageContainer = document.createElement("img");
     imageContainer.classList.add("imageWrapper");
-    let usedImage = episode.image.medium;
-    imageContainer.src = usedImage;
-    parentContainer.appendChild(imageContainer);
 
-    let textContainer = document.createElement("span");
-    textContainer.classList.add("textWrapper");
-    textContainer.innerHTML = `${episode.summary}`;
-    parentContainer.appendChild(textContainer);
+    if (episode.image != null) {
+      let usedImage = episode.image.medium;
+      imageContainer.src = usedImage;
+      parentContainer.appendChild(imageContainer);
+      parentContainer.style.height = "480px";
+    }
+
+    if (episode.summary) {
+      let textContainer = document.createElement("span");
+      textContainer.classList.add("textWrapper");
+      textContainer.innerHTML = `${episode.summary}`;
+      parentContainer.appendChild(textContainer);
+    }
 
     episodes.push(episode);
   }
