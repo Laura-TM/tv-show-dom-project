@@ -1,16 +1,35 @@
 // One of the teachers said we shouldn't have global variables created through the DOM
 // I had some guidance to create functions and avoid having those global variables
 
+let defaultShowID = 82;
+let defaultShowName = "Select/Reset a show";
 let allEpisodes = [];
+let loadingHomePage = true;
 
 function setup() {
-  let headerElement = document.getElementsByTagName("header")[0];
-  headerElement.innerHTML = "";
+  let headerTop = document.getElementsByClassName("headerTop")[0];
+  headerTop.innerHTML = "";
+  let headerBottom = document.getElementsByClassName("headerBottom")[0];
+  headerBottom.innerHTML = "";
   createSearchInput();
-  createEpisodesSelectionList(allEpisodes);
   makePageForEpisodes(allEpisodes);
   const allShows = getAllShows();
-  createShowsSelectionList(allShows);
+  let homeButton = document.getElementsByClassName("floatHomeButton")[0];
+  homeButton.addEventListener("click", goHome);
+
+  if (loadingHomePage) {
+    makePageForShows(allShows);
+    createShowsSelectionList(allShows);
+    loadingHomePage = false;
+  } else {
+    createEpisodesSelectionList(allEpisodes);
+  }
+}
+
+function goHome() {
+  loadingHomePage = true;
+  defaultShowName = "Select/Reset a show";
+  setup();
 }
 
 function formattedEpisode(episode, nameAtStart) {
@@ -36,30 +55,38 @@ function makePageForEpisodes(episodeList) {
 
   for (let episode of episodeList) {
     let parentContainer = document.createElement("div");
-    parentContainer.classList.add("parentWrapper");
+    parentContainer.classList.add("episodeContainer");
     rootElem.appendChild(parentContainer);
 
     let nameContainer = document.createElement("div");
-    nameContainer.classList.add("nameWrapper");
+    nameContainer.classList.add("nameContainer");
     parentContainer.appendChild(nameContainer);
     nameContainer.innerHTML = formattedEpisode(episode, true);
 
     let imageContainer = document.createElement("img");
-    imageContainer.classList.add("imageWrapper");
+    imageContainer.classList.add("episodeImageContainer");
 
     if (episode.image != null) {
       let usedImage = episode.image.medium;
       imageContainer.src = usedImage;
       parentContainer.appendChild(imageContainer);
       parentContainer.style.height = "480px";
+    } else {
+      imageContainer.setAttribute(
+        "src",
+        "https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg"
+      );
+      imageContainer.style.height = "300px";
+      parentContainer.appendChild(imageContainer);
+      parentContainer.style.height = "480px";
     }
 
-    if (episode.summary) {
-      let textContainer = document.createElement("span");
-      textContainer.classList.add("textWrapper");
-      textContainer.innerHTML = `${episode.summary}`;
-      parentContainer.appendChild(textContainer);
-    }
+    let textContainer = document.createElement("p");
+    textContainer.classList.add("textContainer");
+    textContainer.innerHTML = episode.summary
+      ? episode.summary
+      : "No description found.";
+    parentContainer.appendChild(textContainer);
 
     episodes.push(episode);
   }
@@ -68,7 +95,7 @@ function makePageForEpisodes(episodeList) {
 // Level 200
 
 function createSearchInput() {
-  let headerElement = document.getElementsByTagName("header")[0];
+  let headerElement = document.getElementsByClassName("headerTop")[0];
   let inputElement = document.createElement("input");
   inputElement.classList.add("input");
   inputElement.setAttribute("placeholder", "Search an episode");
@@ -103,11 +130,12 @@ function searchEpisodes() {
       counter++;
     }
   }
+
   let paragraphElement = document.getElementsByClassName("paragraph")[0];
   paragraphElement.innerHTML = `Displaying ${counter} / ${episodeList.length} episode(s)`;
   makePageForEpisodes(filteredEpisodes);
   let selectList = document.getElementsByClassName("select")[0];
-  selectList.value = "Select/Reset an option";
+  selectList.value = "Select/Reset an episode";
 }
 
 // Level 300
@@ -115,13 +143,13 @@ function searchEpisodes() {
 function createEpisodesSelectionList(listOfEpisodes) {
   let selectList = document.createElement("select");
   selectList.classList.add("select");
-  let headerElement = document.getElementsByTagName("header")[0];
+  let headerElement = document.getElementsByClassName("headerBottom")[0];
   headerElement.appendChild(selectList);
 
   // I had some help with getting a default option
   let option = document.createElement("option");
   option.classList.add("option");
-  option.textContent = "Select/Reset an option";
+  option.textContent = "Select/Reset an episode";
   selectList.appendChild(option);
 
   for (let episode of listOfEpisodes) {
@@ -141,7 +169,7 @@ function selectOneEpisode() {
   let paragraphElement = document.getElementsByClassName("paragraph")[0];
   paragraphElement.innerHTML = `Displaying your selection`;
   let selectList = document.getElementsByClassName("select")[0];
-  if (selectList.value === "Select/Reset an option") {
+  if (selectList.value === "Select/Reset an episode") {
     paragraphElement.innerHTML = `Full catalogue`;
     makePageForEpisodes(listOfEpisodes);
   } else {
@@ -162,24 +190,27 @@ function createShowsSelectionList() {
 
   let selectList = document.createElement("select");
   selectList.classList.add("select");
-  let headerElement = document.getElementsByTagName("header")[0];
+  let headerElement = document.getElementsByClassName("headerBottom")[0];
   headerElement.appendChild(selectList);
 
-  let option = document.createElement("option");
-  option.classList.add("option");
-  option.textContent = "Select/Reset a show";
-  selectList.appendChild(option);
+  let selectAllOption = document.createElement("option");
+  selectAllOption.classList.add("option");
+  selectAllOption.textContent = "Select/Reset a show";
+  selectList.appendChild(selectAllOption);
 
   for (let show of listOfShows) {
     let option = document.createElement("option");
     option.text = show.name;
     option.value = listOfShows.indexOf(show);
     selectList.appendChild(option);
+    if (show.name == defaultShowName) {
+      selectList.value = option.value;
+    }
   }
   selectList.addEventListener("change", selectOneShow);
 }
 
-function selectOneShow() {
+function selectOneShow(event) {
   let listOfShows = getAllShows();
   // I had help to understand I needed to sort the data again as it was giving the wrong episodes
   listOfShows.sort((a, b) => (a.name > b.name ? 1 : -1));
@@ -187,24 +218,90 @@ function selectOneShow() {
   inputElement.value = "";
   let paragraphElement = document.getElementsByClassName("paragraph")[0];
   paragraphElement.innerHTML = `Displaying your selection`;
-  let selectList = document.getElementsByClassName("select")[1];
-  if (selectList.value === "Select/Reset a show") {
-    paragraphElement.innerHTML = `Full catalogue`;
-    makePageForEpisodes(listOfShows);
+  let selectList = document.getElementsByClassName("select")[0];
+  // I had help on the next two lines of code
+  if (event.currentTarget.id != "") {
+    fetchShow(event.currentTarget.id);
   } else {
     let selectedShow = [];
     let index = selectList.value;
     let episodeObject = listOfShows[index];
     selectedShow.push(episodeObject);
-    // I had helped here to understand I needed to grab the show's ID and fetch through it
+    // I had help here to understand I needed to grab the show's ID and fetch through it
     let id = selectedShow[0].id;
-    fetchData(id);
+    defaultShowName = selectedShow[0].name;
+    fetchShow(id);
+  }
+}
+
+// Level 500
+
+function makePageForShows(showList) {
+  let shows = [];
+  let rootElem = document.getElementById("root");
+  rootElem.innerHTML = "";
+
+  for (let show of showList) {
+    let {
+      id,
+      name,
+      genres,
+      status,
+      runtime,
+      rating: { average },
+      summary,
+    } = show;
+
+    let parentContainer = document.createElement("div");
+    parentContainer.classList.add("showContainer");
+    rootElem.appendChild(parentContainer);
+
+    let nameContainer = document.createElement("div");
+    nameContainer.classList.add("nameContainer", "nameShowHover");
+    nameContainer.setAttribute("id", id);
+    nameContainer.innerHTML = name;
+    parentContainer.appendChild(nameContainer);
+
+    nameContainer.addEventListener("click", selectOneShow);
+
+    let imageContainer = document.createElement("img");
+    imageContainer.classList.add("showImageContainer");
+    imageContainer.setAttribute("id", id);
+
+    if (show.image != null) {
+      let usedImage = show.image.medium;
+      imageContainer.src = usedImage;
+      parentContainer.appendChild(imageContainer);
+      parentContainer.style.height = "600px";
+    } else {
+      imageContainer.setAttribute(
+        "src",
+        "https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg"
+      );
+      imageContainer.style.height = "300px";
+      parentContainer.appendChild(imageContainer);
+      parentContainer.style.height = "480px";
+    }
+
+    imageContainer.addEventListener("click", selectOneShow);
+
+    let extrasContainer = document.createElement("div");
+    extrasContainer.classList.add("extrasContainer");
+    extrasContainer.innerHTML = `Rated: ${average}; Genres: ${genres}; Status: ${status}; Runtime: ${runtime};`;
+    parentContainer.appendChild(extrasContainer);
+
+    let textContainer = document.createElement("p");
+    textContainer.classList.add("textContainer");
+    textContainer.innerHTML = summary ? summary : "No description found.";
+    parentContainer.appendChild(textContainer);
+
+    shows.push(show);
   }
 }
 
 // Level 350
 
-const fetchData = (showID) => {
+const fetchShow = (showID) => {
   const URL = `https://api.tvmaze.com/shows/${showID}/episodes`;
   fetch(URL)
     .then(function (response) {
@@ -224,4 +321,4 @@ const fetchData = (showID) => {
     });
 };
 
-window.onload = fetchData(82);
+window.onload = fetchShow(defaultShowID);
