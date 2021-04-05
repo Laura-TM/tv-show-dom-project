@@ -16,12 +16,14 @@
   padding: 10px 0;
 }
 
-.headerTop {
+/* .headerTop {
   display: flex;
   flex-wrap: wrap;
   width: 100%;
 }
+*/
 
+.headerTop,
 .headerBottom {
   display: flex;
   flex-wrap: wrap;
@@ -39,6 +41,7 @@
   font-weight: bold;
   font-size: 16px;
   margin: 4px 10px;
+  width: 100%;
 }
 
 .input {
@@ -50,7 +53,6 @@
 .option {
   color: #a3a3a3;
   text-align: center;
-  /* margin-bottom: 4px; */
 }
 
 .paragraph:empty:before {
@@ -77,19 +79,19 @@
 
 .floatHomeButton {
   position: fixed;
-  width: 60px;
-  height: 60px;
-  bottom: 40px;
+  width: 50px;
+  height: 50px;
+  bottom: 60px;
   right: 40px;
   background-color: #332542;
   color: #fff;
   border-radius: 50px;
   text-align: center;
-  box-shadow: 2px 2px 3px #999;
+  box-shadow: 2px 2px 3px rgb(173, 172, 172);
 }
 
 .my-float-home-button {
-  margin-top: 14px;
+  margin-top: 10px;
 }
 
 .js-is-hidden {
@@ -120,7 +122,7 @@
 .showImageContainer {
   margin-top: 10px;
   border-radius: 0.7em;
-  max-height: 353px;
+  max-height: 330px;
 }
 
 .nameShowHover:hover {
@@ -134,15 +136,32 @@
   border-width: 3px;
 }
 
-.extrasContainer {
+.extrasFlexContainer {
   display: flex;
-  /* flex-direction: row;
-  flex-grow: 1; */
+  justify-content: space-between;
   background-color: black;
   padding: 5px;
   border: thin solid #fff;
   color: #fff;
   border-radius: 0.5rem;
+  width: 100%;
+}
+
+.flexboxItemsContainer {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background: black;
+  color: white;
+  text-align: center;
+  font-size: 10px;
+  height: 40px;
+  flex: 1 1 auto;
+  max-width: 100%;
+}
+
+.flexboxItemsContainer + .flexboxItemsContainer {
+  border-left: solid 1px white;
 }
 
 .episodeContainer,
@@ -165,11 +184,13 @@
   border-radius: 0.4rem;
   width: 100%;
   height: 60px;
-  font-weight: bolder;
-  display: flex;
+  font-weight: bold;
+  display: grid;
   justify-content: center;
   align-items: center;
   color: rgb(107, 25, 102);
+  padding: 3px;
+  text-align: center;
 }
 
 .episodeImageContainer {
@@ -218,6 +239,12 @@ footer a:active {
   color: blue;
 }
 
+@media screen and (min-width: 375px) {
+  .floatHomeButton {
+    right: 50px;
+  }
+}
+
 @media screen and (min-width: 400px) {
   /* phones */
   #root {
@@ -229,12 +256,41 @@ footer a:active {
     align-items: center;
     margin: 0 auto;
   }
+  .floatHomeButton {
+    width: 55px;
+    height: 55px;
+    bottom: 55px;
+    right: 30px;
+  }
+
+  .my-float-home-button {
+    margin-top: 12px;
+  }
 }
 
 @media screen and (min-width: 500px) {
   /* larger phones */
   #root {
     grid-template-columns: 400px;
+  }
+  .floatHomeButton {
+    width: 60px;
+    height: 60px;
+    bottom: 60px;
+    right: 40px;
+  }
+
+  .my-float-home-button {
+    margin-top: 14px;
+  }
+}
+
+@media screen and (min-width: 600px) {
+  .flexboxItemsContainer {
+    width: calc(50vw - 4em);
+  }
+  .flexboxItemsContainer {
+    font-size: 12px;
   }
 }
 
@@ -251,6 +307,19 @@ footer a:active {
     display: flex;
     flex-wrap: nowrap;
     height: 80px;
+  }
+}
+
+@media screen and (min-width: 960px) {
+  .flexboxItemsContainer {
+    width: calc(25vw - 4em);
+  }
+  &:first-child {
+    margin-left: auto;
+  }
+
+  &:last-child {
+    margin-right: auto;
   }
 }
 

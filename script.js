@@ -5,6 +5,7 @@ let defaultShowID = 82;
 let defaultShowName = "Select/Reset a show";
 let allEpisodes = [];
 let loadingHomePage = true;
+let showMode = true;
 
 function setup() {
   let headerTop = document.getElementsByClassName("headerTop")[0];
@@ -21,8 +22,10 @@ function setup() {
     makePageForShows(allShows);
     createShowsSelectionList(allShows);
     loadingHomePage = false;
+    showMode = true;
   } else {
     createEpisodesSelectionList(allEpisodes);
+    showMode = false;
   }
 }
 
@@ -83,9 +86,10 @@ function makePageForEpisodes(episodeList) {
 
     let textContainer = document.createElement("p");
     textContainer.classList.add("textContainer");
+    // textContainer.style.fontStyle = "italic";
     textContainer.innerHTML = episode.summary
       ? episode.summary
-      : "No description found.";
+      : "<em>No description found.</em>";
     parentContainer.appendChild(textContainer);
 
     episodes.push(episode);
@@ -107,35 +111,60 @@ function createSearchInput() {
   headerElement.appendChild(inputElement);
   headerElement.appendChild(displayElement);
   displayElement.appendChild(paragraphElement);
-  inputElement.addEventListener("input", searchEpisodes);
+  inputElement.addEventListener("input", searchEpisodesOrShows);
 }
 
-function searchEpisodes() {
+function searchEpisodesOrShows() {
   // I had some guidance at this point to understand I needed to retrieve all episodeList again and declare an empty array
   let filteredEpisodes = [];
+  let filteredShows = [];
   let episodeList = allEpisodes;
 
   let word = document.getElementsByTagName("input")[0].value;
   word = word.toLowerCase();
 
   let counter = 0;
-  for (let episode of episodeList) {
-    if (
-      episode.name.toLowerCase().match(word) ||
-      episode.summary.toLowerCase().match(word) ||
-      episode.name.toLowerCase().match(parseInt(word)) ||
-      episode.summary.toLowerCase().match(parseInt(word))
-    ) {
-      filteredEpisodes.push(episode);
-      counter++;
+  if (!showMode) {
+    for (let episode of episodeList) {
+      let { name, summary } = episode;
+      if (
+        name.toLowerCase().match(word) ||
+        summary.toLowerCase().match(word) ||
+        name.toLowerCase().match(parseInt(word)) ||
+        summary.toLowerCase().match(parseInt(word))
+      ) {
+        filteredEpisodes.push(episode);
+        counter++;
+      }
     }
+    let paragraphElement = document.getElementsByClassName("paragraph")[0];
+    paragraphElement.innerHTML = `Displaying ${counter} / ${episodeList.length} episode(s)`;
+    makePageForEpisodes(filteredEpisodes);
+    let selectList = document.getElementsByClassName("select")[0];
+    selectList.value = "Select/Reset an episode";
+  } else {
+    let listOfShows = getAllShows();
+    for (let show of listOfShows) {
+      let { name, genres, summary } = show;
+      if (
+        name.toLowerCase().match(word) ||
+        summary.toLowerCase().match(word) ||
+        genres.toString().toLowerCase().match(word) ||
+        name.toLowerCase().match(parseInt(word)) ||
+        summary.toLowerCase().match(parseInt(word)) ||
+        genres.toString().toLowerCase().match(parseInt(word))
+      ) {
+        filteredShows.push(show);
+        counter++;
+      }
+    }
+    let paragraphElement = document.getElementsByClassName("paragraph")[0];
+    paragraphElement.innerHTML = `Displaying ${counter} / ${listOfShows.length} episode(s)`;
+    makePageForShows(filteredShows);
+    let selectList = document.getElementsByClassName("select")[0];
+    selectList.value = "Select/Reset an episode";
+    showMode = true;
   }
-
-  let paragraphElement = document.getElementsByClassName("paragraph")[0];
-  paragraphElement.innerHTML = `Displaying ${counter} / ${episodeList.length} episode(s)`;
-  makePageForEpisodes(filteredEpisodes);
-  let selectList = document.getElementsByClassName("select")[0];
-  selectList.value = "Select/Reset an episode";
 }
 
 // Level 300
@@ -199,11 +228,12 @@ function createShowsSelectionList() {
   selectList.appendChild(selectAllOption);
 
   for (let show of listOfShows) {
+    let { name } = show;
     let option = document.createElement("option");
-    option.text = show.name;
+    option.text = name;
     option.value = listOfShows.indexOf(show);
     selectList.appendChild(option);
-    if (show.name == defaultShowName) {
+    if (name == defaultShowName) {
       selectList.value = option.value;
     }
   }
@@ -212,7 +242,7 @@ function createShowsSelectionList() {
 
 function selectOneShow(event) {
   let listOfShows = getAllShows();
-  // I had help to understand I needed to sort the data again as it was giving the wrong episodes
+  // I had help to understand I needed to sort the data again as it was delivering the wrong episodes
   listOfShows.sort((a, b) => (a.name > b.name ? 1 : -1));
   let inputElement = document.getElementsByClassName("input")[0];
   inputElement.value = "";
@@ -286,9 +316,28 @@ function makePageForShows(showList) {
     imageContainer.addEventListener("click", selectOneShow);
 
     let extrasContainer = document.createElement("div");
-    extrasContainer.classList.add("extrasContainer");
-    extrasContainer.innerHTML = `Rated: ${average}; Genres: ${genres}; Status: ${status}; Runtime: ${runtime};`;
+    extrasContainer.classList.add("extrasFlexContainer");
     parentContainer.appendChild(extrasContainer);
+
+    let averageContainer = document.createElement("div");
+    averageContainer.classList.add("flexboxItemsContainer");
+    averageContainer.innerHTML = `Rated: ${average}`;
+    extrasContainer.appendChild(averageContainer);
+
+    let genresContainer = document.createElement("div");
+    genresContainer.classList.add("flexboxItemsContainer");
+    genresContainer.innerHTML = `Genres: ${genres}`;
+    extrasContainer.appendChild(genresContainer);
+
+    let statusContainer = document.createElement("div");
+    statusContainer.classList.add("flexboxItemsContainer");
+    statusContainer.innerHTML = `Status: ${status}`;
+    extrasContainer.appendChild(statusContainer);
+
+    let runtimeContainer = document.createElement("div");
+    runtimeContainer.classList.add("flexboxItemsContainer");
+    runtimeContainer.innerHTML = `Runtime: ${runtime}`;
+    extrasContainer.appendChild(runtimeContainer);
 
     let textContainer = document.createElement("p");
     textContainer.classList.add("textContainer");
