@@ -6,8 +6,10 @@
   margin: 0;
 }
 
-.header {
-  height: 140px;
+/* Input search bar and dropdown lists */
+
+header {
+  height: 100px;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -16,36 +18,26 @@
   padding: 10px 0;
 }
 
-/* .headerTop {
-  display: flex;
-  flex-wrap: wrap;
-  width: 100%;
-}
-*/
-
-.headerTop,
-.headerBottom {
-  display: flex;
-  flex-wrap: wrap;
-  width: 100%;
-}
-
 .input,
 .display,
 .select {
   flex: 100%;
-  padding: 0 10px;
   border: 2px solid #ccc;
   height: 1.4em;
   border-radius: 5px;
   font-weight: bold;
-  font-size: 16px;
-  margin: 4px 10px;
-  width: 100%;
+  font-size: 14px;
+  margin-bottom: 5px;
+  margin: 0px 10px;
 }
 
 .input {
   color: rgb(31, 16, 30);
+}
+
+.paragraph {
+  flex: 100%;
+  margin: 0;
 }
 
 .paragraph,
@@ -77,26 +69,58 @@
   color: #ccc;
 }
 
+/* Home button to return to all shows */
+
 .floatHomeButton {
   position: fixed;
   width: 50px;
   height: 50px;
-  bottom: 60px;
+  bottom: 50px;
   right: 40px;
   background-color: #332542;
   color: #fff;
   border-radius: 50px;
   text-align: center;
   box-shadow: 2px 2px 3px rgb(173, 172, 172);
+  cursor: pointer;
 }
 
 .my-float-home-button {
   margin-top: 10px;
 }
 
-.js-is-hidden {
-  display: none;
+/* Scroll to bottom or top of the page */
+
+#scrollToBottomButton {
+  top: 100px;
 }
+
+#scrollToTopButton {
+  top: 30px;
+}
+
+#scrollToBottomButton,
+#scrollToTopButton {
+  right: 44px;
+  position: fixed;
+  z-index: 99;
+  background-color: #332542;
+  border: none;
+  border-radius: 50%;
+  box-shadow: 2px 2px 3px rgb(173, 172, 172);
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 48px;
+  width: 50px;
+  height: 50px;
+}
+
+#scrollToBottomButton:hover,
+#scrollToTopButton:hover {
+  background-color: #555; /* Add a dark-grey background on hover */
+}
+
+/* Styling the background */
 
 #root {
   display: grid;
@@ -108,9 +132,13 @@
   margin: 0 auto;
 }
 
+/* Styling the shows */
+
+.episodeContainer,
 .showContainer {
   display: flex;
   flex-direction: column;
+  align-content: center;
 }
 
 .showContainer:hover {
@@ -136,9 +164,11 @@
   border-width: 3px;
 }
 
+/* Area for rating, genre, status and runtime */
+
 .extrasFlexContainer {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-evenly;
   background-color: black;
   padding: 5px;
   border: thin solid #fff;
@@ -163,6 +193,8 @@
 .flexboxItemsContainer + .flexboxItemsContainer {
   border-left: solid 1px white;
 }
+
+/* Styling the shows and episodes */
 
 .episodeContainer,
 .showContainer {
@@ -203,12 +235,84 @@
   color: rgb(53, 9, 50);
   text-align: center;
   padding-top: 10px;
-  display: -webkit-box;
+  height: 50px;
   max-width: 100%;
-  -webkit-line-clamp: 7;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
 }
+
+/* Read more feature */
+
+.moreDetailsSide {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+.readMoreButton {
+  width: 150px;
+  max-height: 37px;
+  margin-top: 30px;
+  margin-left: 10px;
+  padding: 10px;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  font-weight: 500;
+  background-color: #cb99c5;
+  color: #332b47;
+  font-weight: bolder;
+  font-size: 1rem;
+  margin-top: -0.7rem;
+}
+
+.readLessButton {
+  background-color: #431c53;
+  color: rgb(255, 255, 255);
+}
+
+/* Like button */
+
+.button {
+  max-height: 37px;
+  margin-top: 15px;
+  margin-left: 10px;
+  padding: 10px;
+  font-size: 15px;
+  text-decoration: none;
+  text-align: center;
+  transition: all 0.5s ease;
+}
+
+.likesButton {
+  color: #fff;
+  padding-right: 0;
+  background-color: #694489;
+  width: 150px;
+  border: thin dotted rgb(107, 25, 102);
+  -webkit-clip-path: polygon(0% 0%, 100% 0, 100% 70%, 90% 100%, 0% 100%);
+  clip-path: polygon(0 0, 100% 0, 100% 50%, 75% 100%, 0 100%);
+}
+
+.likesButton:hover {
+  -webkit-clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 100% 100%, 0 100%);
+}
+
+.likesButton:after {
+  content: "\f004";
+  color: #e74c3c;
+  font-family: FontAwesome;
+  display: inline-block;
+  position: relative;
+  right: -55px;
+  transition: all 0.2s ease;
+}
+
+.likesButton:hover:after {
+  margin: -5px 15px;
+  right: 0px;
+}
+
+/* Footer section */
 
 footer {
   background-color: #332542;
@@ -224,22 +328,23 @@ footer a:link {
   text-decoration: none;
 }
 
-/* visited link */
 footer a:visited {
+  /* visited link */
   color: grey;
 }
 
-/* mouse over link */
 footer a:hover {
+  /* mouse over link */
   color: hotpink;
 }
 
-/* selected link */
 footer a:active {
+  /* selected link */
   color: blue;
 }
 
 @media screen and (min-width: 375px) {
+  /* small phones */
   .floatHomeButton {
     right: 50px;
   }
@@ -262,7 +367,6 @@ footer a:active {
     bottom: 55px;
     right: 30px;
   }
-
   .my-float-home-button {
     margin-top: 12px;
   }
@@ -279,16 +383,13 @@ footer a:active {
     bottom: 60px;
     right: 40px;
   }
-
   .my-float-home-button {
     margin-top: 14px;
   }
 }
 
 @media screen and (min-width: 600px) {
-  .flexboxItemsContainer {
-    width: calc(50vw - 4em);
-  }
+  /* smaller tablets */
   .flexboxItemsContainer {
     font-size: 12px;
   }
@@ -301,25 +402,12 @@ footer a:active {
   }
 }
 
-@media screen and (min-width: 900px) {
+@media screen and (min-width: 960px) {
   /* desktops */
-  .header {
+  header {
     display: flex;
     flex-wrap: nowrap;
-    height: 80px;
-  }
-}
-
-@media screen and (min-width: 960px) {
-  .flexboxItemsContainer {
-    width: calc(25vw - 4em);
-  }
-  &:first-child {
-    margin-left: auto;
-  }
-
-  &:last-child {
-    margin-right: auto;
+    height: 60px;
   }
 }
 

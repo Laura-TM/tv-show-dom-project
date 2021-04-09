@@ -1,5 +1,4 @@
-// One of the teachers said we shouldn't have global variables created through the DOM
-// I had some guidance to create functions and avoid having those global variables
+// One of the teachers said we shouldn't have global variables created through the DOM; I had some guidance to create functions and avoid having those global variables
 
 let defaultShowID = 82;
 let defaultShowName = "Select/Reset a show";
@@ -7,17 +6,19 @@ let allEpisodes = [];
 let loadingHomePage = true;
 let showMode = true;
 
+// Clears all header searching features and starts the page
+
 function setup() {
-  let headerTop = document.getElementsByClassName("headerTop")[0];
-  headerTop.innerHTML = "";
-  let headerBottom = document.getElementsByClassName("headerBottom")[0];
-  headerBottom.innerHTML = "";
+  let headerElement = document.getElementsByTagName("header")[0];
+  headerElement.innerHTML = "";
   createSearchInput();
+  debugger;
   makePageForEpisodes(allEpisodes);
   const allShows = getAllShows();
   let homeButton = document.getElementsByClassName("floatHomeButton")[0];
   homeButton.addEventListener("click", goHome);
 
+  // Determines whether to hide or show the show or episode list;
   if (loadingHomePage) {
     makePageForShows(allShows);
     createShowsSelectionList(allShows);
@@ -29,11 +30,51 @@ function setup() {
   }
 }
 
+// Allows you to return to the main page with all shows at any time
+
 function goHome() {
   loadingHomePage = true;
   defaultShowName = "Select/Reset a show";
   setup();
 }
+
+// Scroll to bottom or top of the page buttons
+
+function scrollFunction() {
+  let scrollToTopButton = document.getElementById("scrollToTopButton");
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    scrollToTopButton.style.display = "block";
+  } else {
+    scrollToTopButton.style.display = "none";
+  }
+  scrollToTopButton.addEventListener("click", scrollToTop);
+
+  let scrollToBottomButton = document.getElementById("scrollToBottomButton");
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    scrollToBottomButton.style.display = "block";
+  } else {
+    scrollToBottomButton.style.display = "none";
+  }
+  scrollToBottomButton.addEventListener("click", scrollToBottom);
+}
+
+function scrollToTop() {
+  // Scroll to top logic
+  document.documentElement.scrollTo({
+    top: 0,
+    behavior: "smooth",
+  });
+}
+
+function scrollToBottom() {
+  // Scroll to bottom logic
+  document.documentElement.scrollTo({
+    top: document.body.scrollHeight,
+    behavior: "smooth",
+  });
+}
+
+// Formats episode / show number
 
 function formattedEpisode(episode, nameAtStart) {
   let rootSeason = `${episode.season}`;
@@ -47,7 +88,7 @@ function formattedEpisode(episode, nameAtStart) {
   }
 }
 
-// Level 100
+// Level 100 - produces the episodes' page
 
 function makePageForEpisodes(episodeList) {
   let episodes = [];
@@ -69,6 +110,8 @@ function makePageForEpisodes(episodeList) {
     let imageContainer = document.createElement("img");
     imageContainer.classList.add("episodeImageContainer");
 
+    // Taking account of those episodes with no image available
+
     if (episode.image != null) {
       let usedImage = episode.image.medium;
       imageContainer.src = usedImage;
@@ -79,27 +122,88 @@ function makePageForEpisodes(episodeList) {
         "src",
         "https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg"
       );
-      imageContainer.style.height = "300px";
       parentContainer.appendChild(imageContainer);
-      parentContainer.style.height = "480px";
+      imageContainer.style.height = "280px";
     }
 
-    let textContainer = document.createElement("p");
+    let textContainer = document.createElement("div");
     textContainer.classList.add("textContainer");
-    // textContainer.style.fontStyle = "italic";
-    textContainer.innerHTML = episode.summary
-      ? episode.summary
+    textContainer.style.height = "170px";
+
+    // Taking account of those episodes with no summary
+
+    let shortenedEpisodeSummary = episode.summary
+      ? episode.summary.substring(0, 90)
       : "<em>No description found.</em>";
+
+    textContainer.innerHTML = shortenedEpisodeSummary;
     parentContainer.appendChild(textContainer);
+
+    // Like and Read more section
+
+    let moreDetailsSection = document.createElement("section");
+    moreDetailsSection.classList.add("moreDetailsSide");
+    parentContainer.appendChild(moreDetailsSection);
+
+    // Read more feature
+
+    let readMoreButton = document.createElement("button");
+    readMoreButton.classList.add("button", "readMoreButton");
+    readMoreButton.innerHTML = "Read more";
+    moreDetailsSection.appendChild(readMoreButton);
+
+    if (episode.summary.length < 80) {
+      readMoreButton.disabled = "true";
+    } else {
+      readMoreButton.addEventListener("click", () => {
+        if (readMoreButton.innerHTML === "Read more") {
+          readMoreButton.innerHTML = "Read less";
+          readMoreButton.classList.add("button", "readLessButton");
+          textContainer.innerHTML = episode.summary;
+          textContainer.style.fontSize = "15px";
+          textContainer.style.height = "170px";
+          imageContainer.style.width = "140px";
+          imageContainer.style.height = "140px";
+          imageContainer.style.alignSelf = "center";
+        } else {
+          readMoreButton.innerHTML = "Read more";
+          textContainer.innerHTML = shortenedEpisodeSummary;
+          readMoreButton.classList.remove("readLessButton");
+          textContainer.style.height = "50px";
+          textContainer.style.fontSize = "16px";
+          imageContainer.style.width = "100%";
+          imageContainer.style.height = "auto";
+          textContainer.style.height = "170px";
+        }
+      });
+    }
+
+    // Like button
+
+    let like = 0;
+    let likesButton = document.createElement("button");
+    likesButton.classList.add("button", "likesButton");
+    likesButton.innerHTML = `Like | ${like}`;
+    moreDetailsSection.appendChild(likesButton);
+
+    likesButton.addEventListener("click", function () {
+      if (like == 0) {
+        like++;
+        likesButton.textContent = `Like | ${like}`;
+      } else {
+        like = like - 1;
+        likesButton.textContent = `Like | ${like}`;
+      }
+    });
 
     episodes.push(episode);
   }
 }
 
-// Level 200
+// Level 200 - creates a search bar on the header
 
 function createSearchInput() {
-  let headerElement = document.getElementsByClassName("headerTop")[0];
+  let headerElement = document.getElementsByTagName("header")[0];
   let inputElement = document.createElement("input");
   inputElement.classList.add("input");
   inputElement.setAttribute("placeholder", "Search an episode");
@@ -107,12 +211,20 @@ function createSearchInput() {
   displayElement.classList.add("display");
   let paragraphElement = document.createElement("p");
   paragraphElement.classList.add("paragraph");
-  paragraphElement.setAttribute("data-placeholder", "Full catalogue");
+
+  // Allows to show a message to the user: full catalogue or displaying...
+
+  let displayMessage = loadingHomePage
+    ? "Full catalogue"
+    : "Displaying your selection";
+  paragraphElement.setAttribute("data-placeholder", displayMessage);
   headerElement.appendChild(inputElement);
   headerElement.appendChild(displayElement);
   displayElement.appendChild(paragraphElement);
   inputElement.addEventListener("input", searchEpisodesOrShows);
 }
+
+// Searches the content as the user types in
 
 function searchEpisodesOrShows() {
   // I had some guidance at this point to understand I needed to retrieve all episodeList again and declare an empty array
@@ -159,7 +271,7 @@ function searchEpisodesOrShows() {
       }
     }
     let paragraphElement = document.getElementsByClassName("paragraph")[0];
-    paragraphElement.innerHTML = `Displaying ${counter} / ${listOfShows.length} episode(s)`;
+    paragraphElement.innerHTML = `Displaying ${counter} / ${listOfShows.length} show(s)`;
     makePageForShows(filteredShows);
     let selectList = document.getElementsByClassName("select")[0];
     selectList.value = "Select/Reset an episode";
@@ -167,12 +279,12 @@ function searchEpisodesOrShows() {
   }
 }
 
-// Level 300
+// Level 300 - creates a dropdown list with all episodes for a given show
 
 function createEpisodesSelectionList(listOfEpisodes) {
   let selectList = document.createElement("select");
   selectList.classList.add("select");
-  let headerElement = document.getElementsByClassName("headerBottom")[0];
+  let headerElement = document.getElementsByTagName("header")[0];
   headerElement.appendChild(selectList);
 
   // I had some help with getting a default option
@@ -191,6 +303,8 @@ function createEpisodesSelectionList(listOfEpisodes) {
   selectList.addEventListener("change", selectOneEpisode);
 }
 
+// Allows the user to pick one episode from the dropdown list
+
 function selectOneEpisode() {
   let listOfEpisodes = allEpisodes;
   let inputElement = document.getElementsByClassName("input")[0];
@@ -199,7 +313,7 @@ function selectOneEpisode() {
   paragraphElement.innerHTML = `Displaying your selection`;
   let selectList = document.getElementsByClassName("select")[0];
   if (selectList.value === "Select/Reset an episode") {
-    paragraphElement.innerHTML = `Full catalogue`;
+    paragraphElement.innerHTML = "Full catalogue";
     makePageForEpisodes(listOfEpisodes);
   } else {
     let selectedEpisode = [];
@@ -211,7 +325,7 @@ function selectOneEpisode() {
   }
 }
 
-// Level 400
+// Level 400 - creates a dropdown list with all shows
 
 function createShowsSelectionList() {
   let listOfShows = getAllShows();
@@ -219,7 +333,7 @@ function createShowsSelectionList() {
 
   let selectList = document.createElement("select");
   selectList.classList.add("select");
-  let headerElement = document.getElementsByClassName("headerBottom")[0];
+  let headerElement = document.getElementsByTagName("header")[0];
   headerElement.appendChild(selectList);
 
   let selectAllOption = document.createElement("option");
@@ -240,6 +354,8 @@ function createShowsSelectionList() {
   selectList.addEventListener("change", selectOneShow);
 }
 
+// Allows the user to pick one show from the dropdown list
+
 function selectOneShow(event) {
   let listOfShows = getAllShows();
   // I had help to understand I needed to sort the data again as it was delivering the wrong episodes
@@ -252,6 +368,7 @@ function selectOneShow(event) {
   // I had help on the next two lines of code
   if (event.currentTarget.id != "") {
     fetchShow(event.currentTarget.id);
+    paragraphElement.innerHTML = `Displaying your selection`;
   } else {
     let selectedShow = [];
     let index = selectList.value;
@@ -260,11 +377,12 @@ function selectOneShow(event) {
     // I had help here to understand I needed to grab the show's ID and fetch through it
     let id = selectedShow[0].id;
     defaultShowName = selectedShow[0].name;
+    paragraphElement.innerHTML = `Displaying your selection`;
     fetchShow(id);
   }
 }
 
-// Level 500
+// Level 500 - produces the shows' page
 
 function makePageForShows(showList) {
   let shows = [];
@@ -282,6 +400,10 @@ function makePageForShows(showList) {
       summary,
     } = show;
 
+    /*
+showList.sort((a, b) => parseFloat(b.average) - parseFloat(a.average));
+*/
+
     let parentContainer = document.createElement("div");
     parentContainer.classList.add("showContainer");
     rootElem.appendChild(parentContainer);
@@ -297,6 +419,8 @@ function makePageForShows(showList) {
     let imageContainer = document.createElement("img");
     imageContainer.classList.add("showImageContainer");
     imageContainer.setAttribute("id", id);
+
+    // Taking account of any shows that might not have an image to display
 
     if (show.image != null) {
       let usedImage = show.image.medium;
@@ -314,6 +438,8 @@ function makePageForShows(showList) {
     }
 
     imageContainer.addEventListener("click", selectOneShow);
+
+    // Making a box for extras: rating, genre, status and runtime
 
     let extrasContainer = document.createElement("div");
     extrasContainer.classList.add("extrasFlexContainer");
@@ -339,16 +465,90 @@ function makePageForShows(showList) {
     runtimeContainer.innerHTML = `Runtime: ${runtime}`;
     extrasContainer.appendChild(runtimeContainer);
 
-    let textContainer = document.createElement("p");
+    // Taking account of any shows that might not have a summary
+
+    let shortenedSummary = summary.substring(0, 80);
+
+    let textContainer = document.createElement("div");
     textContainer.classList.add("textContainer");
-    textContainer.innerHTML = summary ? summary : "No description found.";
+    textContainer.innerHTML = summary
+      ? `${shortenedSummary} ...`
+      : "<em>No description found.</em>";
     parentContainer.appendChild(textContainer);
+
+    // Like and Read more section
+
+    let moreDetailsSection = document.createElement("section");
+    moreDetailsSection.classList.add("moreDetailsSide");
+    parentContainer.appendChild(moreDetailsSection);
+
+    // Read more feature
+
+    let readMoreButton = document.createElement("button");
+    readMoreButton.classList.add("button", "readMoreButton");
+    readMoreButton.innerHTML = "Read more";
+    moreDetailsSection.appendChild(readMoreButton);
+    if (summary.length < 80) {
+      readMoreButton.disabled = "true";
+    } else {
+      readMoreButton.addEventListener("click", () => {
+        if (readMoreButton.innerHTML === "Read more") {
+          readMoreButton.innerHTML = "Read less";
+          readMoreButton.classList.add("button", "readLessButton");
+          textContainer.innerHTML = summary;
+          textContainer.style.fontSize = "14px";
+          textContainer.style.height = "230px";
+          imageContainer.style.width = "150px";
+          imageContainer.style.height = "150px";
+          imageContainer.style.alignSelf = "center";
+          // if (summary.length <= 90) {
+          //   debugger;
+          //   textContainer.style.height = "130px";
+          //   imageContainer.style.width = "200px";
+          //   imageContainer.style.height = "200px";
+          //   imageContainer.style.alignSelf = "center";
+          // } else {
+          //   textContainer.fontSize = "12px";
+          //   textContainer.style.height = "230px";
+          //   imageContainer.style.width = "150px";
+          //   imageContainer.style.height = "150px";
+          //   imageContainer.style.alignSelf = "center";
+          // }
+        } else {
+          readMoreButton.innerHTML = "Read more";
+          textContainer.innerHTML = shortenedSummary;
+          readMoreButton.classList.remove("readLessButton");
+          textContainer.style.height = "50px";
+          imageContainer.style.height = "330px";
+          imageContainer.style.width = "100%";
+          textContainer.style.fontSize = "16px";
+        }
+      });
+    }
+
+    // Like button
+
+    let like = 0;
+    let likesButton = document.createElement("button");
+    likesButton.classList.add("button", "likesButton");
+    likesButton.innerHTML = `Like | ${like}`;
+    moreDetailsSection.appendChild(likesButton);
+
+    likesButton.addEventListener("click", function () {
+      if (like == 0) {
+        like++;
+        likesButton.textContent = `Like | ${like}`;
+      } else {
+        like = like - 1;
+        likesButton.textContent = `Like | ${like}`;
+      }
+    });
 
     shows.push(show);
   }
 }
 
-// Level 350
+// Level 350 - fetches the data from the API
 
 const fetchShow = (showID) => {
   const URL = `https://api.tvmaze.com/shows/${showID}/episodes`;
@@ -370,4 +570,100 @@ const fetchShow = (showID) => {
     });
 };
 
+// Fetches the data
+
 window.onload = fetchShow(defaultShowID);
+
+// Delivers the scroll up and down
+
+window.onscroll = function () {
+  scrollFunction();
+};
+
+// Enables back and forth navigation
+
+window.onpopstate = function (event) {
+  if (window.history == null) {
+    window.history.forward();
+  } else if (window.history.length) {
+    history.go(-1);
+  }
+};
+
+/*
+window.addEventListener(
+  "popstate",
+  function (event) {
+    event.preventDefault();
+    console.log("popstate fired!");
+    if (window.history && history.pushState) {
+      history.forward();
+    } else {
+      history.pushState(null, null, window.location.pathname);
+    }
+
+    // updateContent(event.state);
+  },
+  false
+);
+*/
+/*
+function handleBackFunctionality() {
+  if (window.event) {
+    if (window.event.target < 40 && window.event.target < 0) {
+      alert("Browser back button is clicked...");
+    } else {
+      alert("Browser refresh button is clicked...");
+    }
+  } else {
+    if (event.currentTarget.performance.navigation.type == 1) {
+      alert("Browser refresh button is clicked...");
+    }
+    if (event.currentTarget.performance.navigation.type == 2) {
+      alert("Browser back button is clicked...");
+    }
+  }
+}
+window.addEventListener("onbeforeunload", handleBackFunctionality);
+*/
+/*
+window.onpopstate = function (event) {
+  if (event.state) {
+    let divMain = document.getElementById("root");
+    divMain.innerHTML = event.state.html;
+    document.title = event.state.pageTitle;
+  }
+};
+*/
+/*
+if (window.history && history.pushState) {
+  // check for history api support
+  window.addEventListener(
+    "load",
+    function () {
+      // create history states
+      history.pushState(-1, null); // back state
+      history.pushState(0, null); // main state
+      history.pushState(1, null); // forward state
+      history.go(-1); // start in main state
+
+      this.addEventListener(
+        "popstate",
+        function (event, state) {
+          // check history state and fire custom events
+          if ((state = event.state)) {
+            event = document.createEvent("Event");
+            event.initEvent(state > 0 ? "next" : "previous", true, true);
+            this.dispatchEvent(event);
+
+            // reset state
+            history.go(-state);
+          }
+        },
+        false
+      );
+    },
+    false
+  );
+}
+*/
