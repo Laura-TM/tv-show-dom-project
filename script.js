@@ -12,7 +12,6 @@ function setup() {
   let headerElement = document.getElementsByTagName("header")[0];
   headerElement.innerHTML = "";
   createSearchInput();
-  debugger;
   makePageForEpisodes(allEpisodes);
   const allShows = getAllShows();
   let homeButton = document.getElementsByClassName("floatHomeButton")[0];
@@ -216,7 +215,8 @@ function createSearchInput() {
 
   let displayMessage = loadingHomePage
     ? "Full catalogue"
-    : "Displaying your selection";
+    : `Displaying ${defaultShowName}`;
+
   paragraphElement.setAttribute("data-placeholder", displayMessage);
   headerElement.appendChild(inputElement);
   headerElement.appendChild(displayElement);
@@ -310,7 +310,7 @@ function selectOneEpisode() {
   let inputElement = document.getElementsByClassName("input")[0];
   inputElement.value = "";
   let paragraphElement = document.getElementsByClassName("paragraph")[0];
-  paragraphElement.innerHTML = `Displaying your selection`;
+  paragraphElement.innerHTML = `Displaying ${defaultShowName}`;
   let selectList = document.getElementsByClassName("select")[0];
   if (selectList.value === "Select/Reset an episode") {
     paragraphElement.innerHTML = "Full catalogue";
@@ -367,8 +367,9 @@ function selectOneShow(event) {
   let selectList = document.getElementsByClassName("select")[0];
   // I had help on the next two lines of code
   if (event.currentTarget.id != "") {
+    defaultShowName = event.currentTarget.getAttribute("name");
     fetchShow(event.currentTarget.id);
-    paragraphElement.innerHTML = `Displaying your selection`;
+    paragraphElement.innerHTML = `Displaying ${defaultShowName}`;
   } else {
     let selectedShow = [];
     let index = selectList.value;
@@ -377,7 +378,7 @@ function selectOneShow(event) {
     // I had help here to understand I needed to grab the show's ID and fetch through it
     let id = selectedShow[0].id;
     defaultShowName = selectedShow[0].name;
-    paragraphElement.innerHTML = `Displaying your selection`;
+    paragraphElement.innerHTML = `Displaying ${defaultShowName}`;
     fetchShow(id);
   }
 }
@@ -400,10 +401,6 @@ function makePageForShows(showList) {
       summary,
     } = show;
 
-    /*
-showList.sort((a, b) => parseFloat(b.average) - parseFloat(a.average));
-*/
-
     let parentContainer = document.createElement("div");
     parentContainer.classList.add("showContainer");
     rootElem.appendChild(parentContainer);
@@ -411,6 +408,7 @@ showList.sort((a, b) => parseFloat(b.average) - parseFloat(a.average));
     let nameContainer = document.createElement("div");
     nameContainer.classList.add("nameContainer", "nameShowHover");
     nameContainer.setAttribute("id", id);
+    nameContainer.setAttribute("name", name);
     nameContainer.innerHTML = name;
     parentContainer.appendChild(nameContainer);
 
@@ -419,8 +417,9 @@ showList.sort((a, b) => parseFloat(b.average) - parseFloat(a.average));
     let imageContainer = document.createElement("img");
     imageContainer.classList.add("showImageContainer");
     imageContainer.setAttribute("id", id);
+    imageContainer.setAttribute("name", name);
 
-    // Taking account of any shows that might not have an image to display
+    // Taking into account of any shows that might not have an image to display
 
     if (show.image != null) {
       let usedImage = show.image.medium;
@@ -501,19 +500,6 @@ showList.sort((a, b) => parseFloat(b.average) - parseFloat(a.average));
           imageContainer.style.width = "150px";
           imageContainer.style.height = "150px";
           imageContainer.style.alignSelf = "center";
-          // if (summary.length <= 90) {
-          //   debugger;
-          //   textContainer.style.height = "130px";
-          //   imageContainer.style.width = "200px";
-          //   imageContainer.style.height = "200px";
-          //   imageContainer.style.alignSelf = "center";
-          // } else {
-          //   textContainer.fontSize = "12px";
-          //   textContainer.style.height = "230px";
-          //   imageContainer.style.width = "150px";
-          //   imageContainer.style.height = "150px";
-          //   imageContainer.style.alignSelf = "center";
-          // }
         } else {
           readMoreButton.innerHTML = "Read more";
           textContainer.innerHTML = shortenedSummary;
@@ -579,91 +565,3 @@ window.onload = fetchShow(defaultShowID);
 window.onscroll = function () {
   scrollFunction();
 };
-
-// Enables back and forth navigation
-
-window.onpopstate = function (event) {
-  if (window.history == null) {
-    window.history.forward();
-  } else if (window.history.length) {
-    history.go(-1);
-  }
-};
-
-/*
-window.addEventListener(
-  "popstate",
-  function (event) {
-    event.preventDefault();
-    console.log("popstate fired!");
-    if (window.history && history.pushState) {
-      history.forward();
-    } else {
-      history.pushState(null, null, window.location.pathname);
-    }
-
-    // updateContent(event.state);
-  },
-  false
-);
-*/
-/*
-function handleBackFunctionality() {
-  if (window.event) {
-    if (window.event.target < 40 && window.event.target < 0) {
-      alert("Browser back button is clicked...");
-    } else {
-      alert("Browser refresh button is clicked...");
-    }
-  } else {
-    if (event.currentTarget.performance.navigation.type == 1) {
-      alert("Browser refresh button is clicked...");
-    }
-    if (event.currentTarget.performance.navigation.type == 2) {
-      alert("Browser back button is clicked...");
-    }
-  }
-}
-window.addEventListener("onbeforeunload", handleBackFunctionality);
-*/
-/*
-window.onpopstate = function (event) {
-  if (event.state) {
-    let divMain = document.getElementById("root");
-    divMain.innerHTML = event.state.html;
-    document.title = event.state.pageTitle;
-  }
-};
-*/
-/*
-if (window.history && history.pushState) {
-  // check for history api support
-  window.addEventListener(
-    "load",
-    function () {
-      // create history states
-      history.pushState(-1, null); // back state
-      history.pushState(0, null); // main state
-      history.pushState(1, null); // forward state
-      history.go(-1); // start in main state
-
-      this.addEventListener(
-        "popstate",
-        function (event, state) {
-          // check history state and fire custom events
-          if ((state = event.state)) {
-            event = document.createEvent("Event");
-            event.initEvent(state > 0 ? "next" : "previous", true, true);
-            this.dispatchEvent(event);
-
-            // reset state
-            history.go(-state);
-          }
-        },
-        false
-      );
-    },
-    false
-  );
-}
-*/
