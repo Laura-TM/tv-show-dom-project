@@ -1,6 +1,5 @@
 // One of the teachers said we shouldn't have global variables created through the DOM; I had some guidance to create functions and avoid having those global variables
 
-// let defaultShowID = 82;
 let defaultShowName = "Select/Reset a show";
 let allEpisodes = [];
 let loadingHomePage = true;
@@ -120,27 +119,28 @@ function makePageForEpisodes(episodeList) {
       imageContainer.src = usedImage;
       parentContainer.appendChild(imageContainer);
       parentContainer.classList.add("episodeHeightWhenImageAvailable");
-      // parentContainer.style.height = "480px";
     } else {
       imageContainer.setAttribute(
         "src",
-        "https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg"
+        "https://i.ibb.co/s6xvrCH/noimage.png"
       );
       parentContainer.appendChild(imageContainer);
-      imageContainer.style.height = "280px";
+      parentContainer.classList.add("episodeHeightWhenImageAvailable");
     }
+
+    let shortenedEpisodeSummary = `${episode.summary.substring(0, 100)} ...`;
 
     let textContainer = document.createElement("div");
     textContainer.classList.add("textContainer");
-    textContainer.style.height = "170px";
 
     // Taking account of those episodes with no summary
 
-    let shortenedEpisodeSummary = episode.summary
-      ? episode.summary.substring(0, 90)
-      : "<em>No description found.</em>";
-
-    textContainer.innerHTML = shortenedEpisodeSummary;
+    if (episode.summary) {
+      textContainer.innerHTML = shortenedEpisodeSummary;
+    } else {
+      textContainer.innerHTML = "No description found.";
+      textContainer.classList.add("textNotFound");
+    }
     parentContainer.appendChild(textContainer);
 
     // Like and Read more section
@@ -165,21 +165,15 @@ function makePageForEpisodes(episodeList) {
         if (readMoreButton.innerHTML === "Read more") {
           readMoreButton.innerHTML = "Read less";
           readMoreButton.classList.add("button", "readLessButton");
-          textContainer.innerHTML = episode.summary;
-          textContainer.style.fontSize = "15px";
-          textContainer.style.height = "170px";
-          imageContainer.style.width = "140px";
-          imageContainer.style.height = "140px";
-          imageContainer.style.alignSelf = "center";
+          textContainer.innerHTML = `${episode.summary.substring(0, 485)} ...`;
+          textContainer.classList.add("expandedText");
+          imageContainer.classList.add("minimisedImage");
         } else {
           readMoreButton.innerHTML = "Read more";
-          textContainer.innerHTML = shortenedEpisodeSummary;
+          textContainer.innerHTML = `${shortenedEpisodeSummary}`;
           readMoreButton.classList.remove("readLessButton");
-          textContainer.style.height = "50px";
-          textContainer.style.fontSize = "16px";
-          imageContainer.style.width = "100%";
-          imageContainer.style.height = "auto";
-          textContainer.style.height = "170px";
+          textContainer.classList.remove("expandedText");
+          imageContainer.classList.remove("minimisedImage");
         }
       });
     }
@@ -257,15 +251,6 @@ function searchEpisodesOrShows() {
         filteredEpisodes.push(episode);
         counter++;
       }
-      // if (
-      //   name.toLowerCase().match(word) ||
-      //   summary.toLowerCase().match(word) ||
-      //   name.toLowerCase().match(parseInt(word)) ||
-      //   summary.toLowerCase().match(parseInt(word))
-      // ) {
-      //   filteredEpisodes.push(episode);
-      //   counter++;
-      // }
     }
     let paragraphElement = document.getElementsByClassName("paragraph")[0];
     paragraphElement.innerHTML = `Displaying ${counter} / ${episodeList.length} episode(s)`;
@@ -430,6 +415,10 @@ function makePageForShows(showList) {
       summary,
     } = show;
 
+    if (!isValidShow(id)) {
+      continue;
+    }
+
     let parentContainer = document.createElement("div");
     parentContainer.classList.add("showContainer");
     rootElem.appendChild(parentContainer);
@@ -454,15 +443,12 @@ function makePageForShows(showList) {
       let usedImage = show.image.medium;
       imageContainer.src = usedImage;
       parentContainer.appendChild(imageContainer);
-      parentContainer.style.height = "600px";
     } else {
       imageContainer.setAttribute(
         "src",
-        "https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg"
+        "https://i.ibb.co/s6xvrCH/noimage.png"
       );
-      imageContainer.style.height = "300px";
       parentContainer.appendChild(imageContainer);
-      parentContainer.style.height = "480px";
     }
 
     imageContainer.addEventListener("click", selectOneShow);
@@ -493,15 +479,21 @@ function makePageForShows(showList) {
     runtimeContainer.innerHTML = `Runtime: ${runtime}`;
     extrasContainer.appendChild(runtimeContainer);
 
-    // Taking account of any shows that might not have a summary
+    // Shortening the summary
 
-    let shortenedSummary = summary.substring(0, 80);
+    let shortenedSummary = summary.substring(0, 85);
 
     let textContainer = document.createElement("div");
     textContainer.classList.add("textContainer");
-    textContainer.innerHTML = summary
-      ? `${shortenedSummary} ...`
-      : "<em>No description found.</em>";
+
+    // Taking account of any shows that might not have a summary
+
+    if (summary) {
+      textContainer.innerHTML = `${shortenedSummary} ...`;
+    } else {
+      textContainer.innerHTML = "No description found.";
+      textContainer.classList.add("textNotFound");
+    }
     parentContainer.appendChild(textContainer);
 
     // Like and Read more section
@@ -518,25 +510,21 @@ function makePageForShows(showList) {
     moreDetailsSection.appendChild(readMoreButton);
     if (summary.length < 80) {
       readMoreButton.disabled = "true";
+      readMoreButton.classList.add("disabledButton");
     } else {
       readMoreButton.addEventListener("click", () => {
         if (readMoreButton.innerHTML === "Read more") {
           readMoreButton.innerHTML = "Read less";
           readMoreButton.classList.add("button", "readLessButton");
-          textContainer.innerHTML = summary;
-          textContainer.style.fontSize = "14px";
-          textContainer.style.height = "230px";
-          imageContainer.style.width = "150px";
-          imageContainer.style.height = "150px";
-          imageContainer.style.alignSelf = "center";
+          textContainer.innerHTML = summary.substring(0, 485);
+          textContainer.classList.add("expandedText");
+          imageContainer.classList.add("minimisedImage");
         } else {
           readMoreButton.innerHTML = "Read more";
-          textContainer.innerHTML = shortenedSummary;
+          textContainer.innerHTML = `${shortenedSummary} ...`;
           readMoreButton.classList.remove("readLessButton");
-          textContainer.style.height = "50px";
-          imageContainer.style.height = "330px";
-          imageContainer.style.width = "100%";
-          textContainer.style.fontSize = "16px";
+          textContainer.classList.remove("expandedText");
+          imageContainer.classList.remove("minimisedImage");
         }
       });
     }
@@ -587,7 +575,6 @@ const fetchShow = (showID) => {
 
 // What happens on load
 
-//window.onload = fetchShow(defaultShowID);
 window.onload = setup();
 
 // Delivers the scroll up and down

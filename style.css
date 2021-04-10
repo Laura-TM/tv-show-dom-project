@@ -93,14 +93,6 @@ header {
 
 /* Scroll to bottom or top of the page */
 
-#scrollToBottomButton {
-  top: 100px;
-}
-
-#scrollToTopButton {
-  top: 30px;
-}
-
 #scrollToBottomButton,
 #scrollToTopButton {
   right: 40px;
@@ -115,6 +107,14 @@ header {
   line-height: 48px;
   width: 55px;
   height: 55px;
+}
+
+#scrollToBottomButton {
+  top: 100px;
+}
+
+#scrollToTopButton {
+  top: 30px;
 }
 
 #scrollToBottomButton:hover,
@@ -152,6 +152,10 @@ header {
   display: flex;
   flex-direction: column;
   align-content: center;
+}
+
+.showContainer {
+  height: 600px;
 }
 
 .episodeHeightWhenImageAvailable {
@@ -244,6 +248,7 @@ header {
 
 .episodeImageContainer {
   width: 100%;
+  height: auto;
   margin-top: 20px;
   border-radius: 0.7em;
 }
@@ -253,8 +258,28 @@ header {
   text-align: justify;
   padding-top: 10px;
   font-size: 14px;
-  height: 50px;
+  height: 170px;
   max-width: 100%;
+}
+
+.textNotFound {
+  font-style: italic;
+  text-align: center;
+}
+
+/* Text when read more clicked */
+
+.expandedText {
+  height: 230px;
+  font-size: 14px;
+}
+
+/* Image when read more clicked */
+
+.minimisedImage {
+  height: 150px;
+  width: 150px;
+  align-self: center;
 }
 
 /* Read more feature */
@@ -274,17 +299,19 @@ header {
   border: none;
   outline: none;
   cursor: pointer;
-  font-weight: 500;
   background-color: #cb99c5;
   color: #332b47;
   font-weight: bolder;
   font-size: 1rem;
-  margin-top: -0.7rem;
 }
 
 .readLessButton {
   background-color: #431c53;
   color: rgb(255, 255, 255);
+}
+
+.disabledButton {
+  cursor: not-allowed;
 }
 
 /* Like button */
@@ -422,11 +449,6 @@ footer a:active {
 
 @media screen and (min-width: 960px) {
   /* desktops */
-  /* header {
-    display: flex;
-    flex-wrap: nowrap;
-    height: 60px;
-  } */
   .input {
     width: 10%;
   }
@@ -447,6 +469,12 @@ footer a:active {
     display: flex;
     flex-wrap: nowrap;
     height: 60px;
+  }
+}
+
+@media screen and (max-width: 1136px) and (min-width: 1000px) {
+  .paragraph {
+    font-size: 12px;
   }
 }
 
