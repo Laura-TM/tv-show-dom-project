@@ -160,12 +160,13 @@ function makePageForEpisodes(episodeList) {
       // do nothing
     } else if (episode.summary.length < 80) {
       readMoreButton.disabled = "true";
+      readMoreButton.classList.add("disabledButton");
     } else {
       readMoreButton.addEventListener("click", () => {
         if (readMoreButton.innerHTML === "Read more") {
           readMoreButton.innerHTML = "Read less";
           readMoreButton.classList.add("button", "readLessButton");
-          textContainer.innerHTML = `${episode.summary.substring(0, 485)} ...`;
+          textContainer.innerHTML = `${episode.summary.substring(0, 485)}`;
           textContainer.classList.add("expandedText");
           imageContainer.classList.add("minimisedImage");
         } else {
