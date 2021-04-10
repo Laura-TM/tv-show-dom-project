@@ -1,10 +1,11 @@
 // One of the teachers said we shouldn't have global variables created through the DOM; I had some guidance to create functions and avoid having those global variables
 
-let defaultShowID = 82;
+// let defaultShowID = 82;
 let defaultShowName = "Select/Reset a show";
 let allEpisodes = [];
 let loadingHomePage = true;
 let showMode = true;
+let invalidEpisodeIDs = [1127];
 
 // Clears all header searching features and starts the page
 
@@ -42,17 +43,21 @@ function goHome() {
 function scrollFunction() {
   let scrollToTopButton = document.getElementById("scrollToTopButton");
   if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
-    scrollToTopButton.style.display = "block";
+    scrollToTopButton.classList.add("displayBlock");
+    scrollToTopButton.classList.remove("displayNone");
   } else {
-    scrollToTopButton.style.display = "none";
+    scrollToTopButton.classList.add("displayNone");
+    scrollToTopButton.classList.remove("displayBlock");
   }
   scrollToTopButton.addEventListener("click", scrollToTop);
 
   let scrollToBottomButton = document.getElementById("scrollToBottomButton");
   if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
-    scrollToBottomButton.style.display = "block";
+    scrollToBottomButton.classList.add("displayBlock");
+    scrollToBottomButton.classList.remove("displayNone");
   } else {
-    scrollToBottomButton.style.display = "none";
+    scrollToBottomButton.classList.add("displayNone");
+    scrollToBottomButton.classList.remove("displayBlock");
   }
   scrollToBottomButton.addEventListener("click", scrollToBottom);
 }
@@ -94,7 +99,6 @@ function makePageForEpisodes(episodeList) {
   let rootElem = document.getElementById("root");
   // I had help on the next line to understand I needed to clear the list first
   rootElem.innerHTML = "";
-  rootElem.style.backgroundColor = "#ADADC9";
 
   for (let episode of episodeList) {
     let parentContainer = document.createElement("div");
@@ -115,7 +119,8 @@ function makePageForEpisodes(episodeList) {
       let usedImage = episode.image.medium;
       imageContainer.src = usedImage;
       parentContainer.appendChild(imageContainer);
-      parentContainer.style.height = "480px";
+      parentContainer.classList.add("episodeHeightWhenImageAvailable");
+      // parentContainer.style.height = "480px";
     } else {
       imageContainer.setAttribute(
         "src",
@@ -151,7 +156,9 @@ function makePageForEpisodes(episodeList) {
     readMoreButton.innerHTML = "Read more";
     moreDetailsSection.appendChild(readMoreButton);
 
-    if (episode.summary.length < 80) {
+    if (!episode.summary) {
+      // do nothing
+    } else if (episode.summary.length < 80) {
       readMoreButton.disabled = "true";
     } else {
       readMoreButton.addEventListener("click", () => {
@@ -239,7 +246,9 @@ function searchEpisodesOrShows() {
   if (!showMode) {
     for (let episode of episodeList) {
       let { name, summary } = episode;
-      if (
+      if (name == null || summary == null) {
+        continue;
+      } else if (
         name.toLowerCase().match(word) ||
         summary.toLowerCase().match(word) ||
         name.toLowerCase().match(parseInt(word)) ||
@@ -248,6 +257,15 @@ function searchEpisodesOrShows() {
         filteredEpisodes.push(episode);
         counter++;
       }
+      // if (
+      //   name.toLowerCase().match(word) ||
+      //   summary.toLowerCase().match(word) ||
+      //   name.toLowerCase().match(parseInt(word)) ||
+      //   summary.toLowerCase().match(parseInt(word))
+      // ) {
+      //   filteredEpisodes.push(episode);
+      //   counter++;
+      // }
     }
     let paragraphElement = document.getElementsByClassName("paragraph")[0];
     paragraphElement.innerHTML = `Displaying ${counter} / ${episodeList.length} episode(s)`;
@@ -325,6 +343,12 @@ function selectOneEpisode() {
   }
 }
 
+// Checks for invalid shows
+
+function isValidShow(showID) {
+  return !invalidEpisodeIDs.includes(showID);
+}
+
 // Level 400 - creates a dropdown list with all shows
 
 function createShowsSelectionList() {
@@ -342,7 +366,12 @@ function createShowsSelectionList() {
   selectList.appendChild(selectAllOption);
 
   for (let show of listOfShows) {
-    let { name } = show;
+    let { name, id } = show;
+
+    if (!isValidShow(id)) {
+      continue;
+    }
+
     let option = document.createElement("option");
     option.text = name;
     option.value = listOfShows.indexOf(show);
@@ -556,9 +585,10 @@ const fetchShow = (showID) => {
     });
 };
 
-// Fetches the data
+// What happens on load
 
-window.onload = fetchShow(defaultShowID);
+//window.onload = fetchShow(defaultShowID);
+window.onload = setup();
 
 // Delivers the scroll up and down
 

@@ -73,6 +73,7 @@ header {
 
 .floatHomeButton {
   position: fixed;
+  z-index: 99;
   width: 50px;
   height: 50px;
   bottom: 50px;
@@ -87,6 +88,7 @@ header {
 
 .my-float-home-button {
   margin-top: 10px;
+  z-index: 99;
 }
 
 /* Scroll to bottom or top of the page */
@@ -101,23 +103,33 @@ header {
 
 #scrollToBottomButton,
 #scrollToTopButton {
-  right: 44px;
+  right: 40px;
   position: fixed;
   z-index: 99;
-  background-color: #332542;
+  background-color: #301934;
   border: none;
   border-radius: 50%;
   box-shadow: 2px 2px 3px rgb(173, 172, 172);
   cursor: pointer;
   font-size: 16px;
   line-height: 48px;
-  width: 50px;
-  height: 50px;
+  width: 55px;
+  height: 55px;
 }
 
 #scrollToBottomButton:hover,
 #scrollToTopButton:hover {
-  background-color: #555; /* Add a dark-grey background on hover */
+  background-color: #cbc3e3;
+  outline: none;
+  border: none;
+}
+
+.displayBlock {
+  display: block;
+}
+
+.displayNone {
+  display: none;
 }
 
 /* Styling the background */
@@ -130,6 +142,7 @@ header {
   justify-content: center;
   align-items: center;
   margin: 0 auto;
+  background-color: #adadc9;
 }
 
 /* Styling the shows */
@@ -139,6 +152,10 @@ header {
   display: flex;
   flex-direction: column;
   align-content: center;
+}
+
+.episodeHeightWhenImageAvailable {
+  height: 480px;
 }
 
 .showContainer:hover {
@@ -215,7 +232,7 @@ header {
   border: medium ridge rgb(107, 25, 102);
   border-radius: 0.4rem;
   width: 100%;
-  height: 60px;
+  height: 80px;
   font-weight: bold;
   display: grid;
   justify-content: center;
@@ -233,8 +250,9 @@ header {
 
 .textContainer {
   color: rgb(53, 9, 50);
-  text-align: center;
+  text-align: justify;
   padding-top: 10px;
+  font-size: 14px;
   height: 50px;
   max-width: 100%;
 }
@@ -404,10 +422,19 @@ footer a:active {
 
 @media screen and (min-width: 960px) {
   /* desktops */
-  header {
+  /* header {
     display: flex;
     flex-wrap: nowrap;
     height: 60px;
+  } */
+  .input {
+    width: 10%;
+  }
+  .select {
+    width: 40%;
+  }
+  .display {
+    width: 50%;
   }
 }
 
@@ -415,6 +442,11 @@ footer a:active {
   /* large screens */
   #root {
     grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  header {
+    display: flex;
+    flex-wrap: nowrap;
+    height: 60px;
   }
 }
 
