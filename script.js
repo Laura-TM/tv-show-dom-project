@@ -128,15 +128,13 @@ function makePageForEpisodes(episodeList) {
       parentContainer.classList.add("episodeHeightWhenImageAvailable");
     }
 
-    let shortenedEpisodeSummary = `${episode.summary.substring(0, 100)} ...`;
-
     let textContainer = document.createElement("div");
     textContainer.classList.add("textContainer");
 
     // Taking account of those episodes with no summary
 
     if (episode.summary) {
-      textContainer.innerHTML = shortenedEpisodeSummary;
+      textContainer.innerHTML = `${episode.summary.substring(0, 100)} ...`;
     } else {
       textContainer.innerHTML = "No description found.";
       textContainer.classList.add("textNotFound");
@@ -171,7 +169,7 @@ function makePageForEpisodes(episodeList) {
           imageContainer.classList.add("minimisedImage");
         } else {
           readMoreButton.innerHTML = "Read more";
-          textContainer.innerHTML = `${shortenedEpisodeSummary}`;
+          textContainer.innerHTML = `${episode.summary.substring(0, 100)}`;
           readMoreButton.classList.remove("readLessButton");
           textContainer.classList.remove("expandedText");
           imageContainer.classList.remove("minimisedImage");
@@ -482,15 +480,13 @@ function makePageForShows(showList) {
 
     // Shortening the summary
 
-    let shortenedSummary = summary.substring(0, 85);
-
     let textContainer = document.createElement("div");
     textContainer.classList.add("textContainer");
 
     // Taking account of any shows that might not have a summary
 
     if (summary) {
-      textContainer.innerHTML = `${shortenedSummary} ...`;
+      textContainer.innerHTML = `${summary.substring(0, 85)} ...`;
     } else {
       textContainer.innerHTML = "No description found.";
       textContainer.classList.add("textNotFound");
@@ -522,7 +518,7 @@ function makePageForShows(showList) {
           imageContainer.classList.add("minimisedImage");
         } else {
           readMoreButton.innerHTML = "Read more";
-          textContainer.innerHTML = `${shortenedSummary} ...`;
+          textContainer.innerHTML = `${summary.substring(0, 85)}...`;
           readMoreButton.classList.remove("readLessButton");
           textContainer.classList.remove("expandedText");
           imageContainer.classList.remove("minimisedImage");
