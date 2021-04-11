@@ -1,3 +1,486 @@
+/* Mobile-first approach */
+
+* {
+  box-sizing: border-box;
+  font-family: "Play", sans-serif;
+  margin: 0;
+}
+
+/* Input search bar and dropdown lists */
+
+header {
+  height: 100px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  background-color: #332542;
+  padding: 10px 0;
+}
+
+.input,
+.display,
+.select {
+  flex: 100%;
+  border: 2px solid #ccc;
+  height: 1.4em;
+  border-radius: 5px;
+  font-weight: bold;
+  font-size: 14px;
+  margin-bottom: 5px;
+  margin: 0px 10px;
+}
+
+.input {
+  color: rgb(31, 16, 30);
+}
+
+.paragraph {
+  flex: 100%;
+  margin: 0;
+}
+
+.paragraph,
+.select,
+.option {
+  color: #a3a3a3;
+  text-align: center;
+}
+
+.paragraph:empty:before {
+  content: attr(data-placeholder);
+  color: #a3a3a3;
+}
+
+::placeholder {
+  /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: #ccc;
+  /* Firefox */
+  opacity: 1;
+}
+
+:-ms-input-placeholder {
+  /* Internet Explorer 10-11 */
+  color: #ccc;
+}
+
+::-ms-input-placeholder {
+  /* Microsoft Edge */
+  color: #ccc;
+}
+
+/* Home button to return to all shows */
+
+.floatHomeButton {
+  position: fixed;
+  z-index: 99;
+  width: 50px;
+  height: 50px;
+  bottom: 50px;
+  right: 40px;
+  background-color: #332542;
+  color: #fff;
+  border-radius: 50px;
+  text-align: center;
+  box-shadow: 2px 2px 3px rgb(173, 172, 172);
+  cursor: pointer;
+}
+
+.my-float-home-button {
+  margin-top: 10px;
+  z-index: 99;
+}
+
+/* Scroll to bottom or top of the page */
+
+#scrollToBottomButton,
+#scrollToTopButton {
+  right: 40px;
+  position: fixed;
+  z-index: 99;
+  background-color: #301934;
+  border: none;
+  border-radius: 50%;
+  box-shadow: 2px 2px 3px rgb(173, 172, 172);
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 48px;
+  width: 55px;
+  height: 55px;
+}
+
+#scrollToBottomButton {
+  top: 100px;
+}
+
+#scrollToTopButton {
+  top: 30px;
+}
+
+#scrollToBottomButton:hover,
+#scrollToTopButton:hover {
+  background-color: #cbc3e3;
+  outline: none;
+  border: none;
+}
+
+.displayBlock {
+  display: block;
+}
+
+.displayNone {
+  display: none;
+}
+
+/* Styling the background */
+
 #root {
-  color: red;
+  display: grid;
+  grid-auto-rows: auto;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-gap: 10px;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+  background-color: #adadc9;
+}
+
+/* Styling the shows */
+
+.episodeContainer,
+.showContainer {
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+}
+
+.showContainer {
+  height: 600px;
+}
+
+.episodeHeightWhenImageAvailable {
+  height: 480px;
+}
+
+.showContainer:hover {
+  border-radius: 14px;
+  background: linear-gradient(145deg, #e6e6e6, #ffffff);
+  box-shadow: 8px 8px 23px #9c9c9c, -8px -8px 23px #ffffff;
+}
+
+.showImageContainer {
+  margin-top: 10px;
+  border-radius: 0.7em;
+  max-height: 330px;
+}
+
+.nameShowHover:hover {
+  cursor: pointer;
+  border-width: 4px;
+}
+
+.showImageContainer:hover {
+  cursor: pointer;
+  border: medium ridge rgb(252, 250, 253);
+  border-width: 3px;
+}
+
+/* Area for rating, genre, status and runtime */
+
+.extrasFlexContainer {
+  display: flex;
+  justify-content: space-evenly;
+  background-color: black;
+  padding: 5px;
+  border: thin solid #fff;
+  color: #fff;
+  border-radius: 0.5rem;
+  width: 100%;
+}
+
+.flexboxItemsContainer {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background: black;
+  color: white;
+  text-align: center;
+  font-size: 10px;
+  height: 40px;
+  flex: 1 1 auto;
+  max-width: 100%;
+}
+
+.flexboxItemsContainer + .flexboxItemsContainer {
+  border-left: solid 1px white;
+}
+
+/* Styling the shows and episodes */
+
+.episodeContainer,
+.showContainer {
+  background-color: #e4e6eb;
+  margin: 20px;
+  padding: 20px;
+  border-radius: 0.2rem;
+  width: 90%;
+  box-shadow: 0 2px 10px 1px rgba(0, 0, 0, 0.5);
+}
+
+.episodeContainer:hover {
+  background-color: #f1f1f1;
+  border: medium double rgb(107, 25, 102);
+}
+
+.nameContainer {
+  border: medium ridge rgb(107, 25, 102);
+  border-radius: 0.4rem;
+  width: 100%;
+  height: 80px;
+  font-weight: bold;
+  display: grid;
+  justify-content: center;
+  align-items: center;
+  color: rgb(107, 25, 102);
+  padding: 3px;
+  text-align: center;
+}
+
+.episodeImageContainer {
+  width: 100%;
+  height: auto;
+  margin-top: 20px;
+  border-radius: 0.7em;
+}
+
+.textContainer {
+  color: rgb(53, 9, 50);
+  text-align: justify;
+  padding-top: 10px;
+  font-size: 14px;
+  height: 170px;
+  max-width: 100%;
+}
+
+.textNotFound {
+  font-style: italic;
+  text-align: center;
+}
+
+/* Text when read more clicked */
+
+.expandedText {
+  height: 230px;
+  font-size: 14px;
+}
+
+/* Image when read more clicked */
+
+.minimisedImage {
+  height: 150px;
+  width: 150px;
+  align-self: center;
+}
+
+/* Read more feature */
+
+.moreDetailsSide {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+.readMoreButton {
+  width: 150px;
+  max-height: 37px;
+  margin-top: 30px;
+  margin-left: 10px;
+  padding: 10px;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  background-color: #cb99c5;
+  color: #332b47;
+  font-weight: bolder;
+  font-size: 1rem;
+}
+
+.readLessButton {
+  background-color: #431c53;
+  color: rgb(255, 255, 255);
+}
+
+.disabledButton {
+  cursor: not-allowed;
+}
+
+/* Like button */
+
+.button {
+  max-height: 37px;
+  margin-top: 15px;
+  margin-left: 10px;
+  padding: 10px;
+  font-size: 15px;
+  text-decoration: none;
+  text-align: center;
+  transition: all 0.5s ease;
+}
+
+.likesButton {
+  color: #fff;
+  padding-right: 0;
+  background-color: #694489;
+  width: 150px;
+  border: thin dotted rgb(107, 25, 102);
+  -webkit-clip-path: polygon(0% 0%, 100% 0, 100% 70%, 90% 100%, 0% 100%);
+  clip-path: polygon(0 0, 100% 0, 100% 50%, 75% 100%, 0 100%);
+}
+
+.likesButton:hover {
+  -webkit-clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 100% 100%, 0 100%);
+}
+
+.likesButton:after {
+  content: "\f004";
+  color: #e74c3c;
+  font-family: FontAwesome;
+  display: inline-block;
+  position: relative;
+  right: -55px;
+  transition: all 0.2s ease;
+}
+
+.likesButton:hover:after {
+  margin: -5px 15px;
+  right: 0px;
+}
+
+/* Footer section */
+
+footer {
+  background-color: #332542;
+  color: white;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+footer a:link {
+  color: white;
+  text-decoration: none;
+}
+
+footer a:visited {
+  /* visited link */
+  color: grey;
+}
+
+footer a:hover {
+  /* mouse over link */
+  color: hotpink;
+}
+
+footer a:active {
+  /* selected link */
+  color: blue;
+}
+
+@media screen and (min-width: 375px) {
+  /* small phones */
+  .floatHomeButton {
+    right: 50px;
+  }
+}
+
+@media screen and (min-width: 400px) {
+  /* phones */
+  #root {
+    display: grid;
+    grid-auto-rows: auto;
+    grid-template-columns: 350px;
+    grid-gap: 10px;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+  }
+  .floatHomeButton {
+    width: 55px;
+    height: 55px;
+    bottom: 55px;
+    right: 30px;
+  }
+  .my-float-home-button {
+    margin-top: 12px;
+  }
+}
+
+@media screen and (min-width: 500px) {
+  /* larger phones */
+  #root {
+    grid-template-columns: 400px;
+  }
+  .floatHomeButton {
+    width: 60px;
+    height: 60px;
+    bottom: 60px;
+    right: 40px;
+  }
+  .my-float-home-button {
+    margin-top: 14px;
+  }
+}
+
+@media screen and (min-width: 600px) {
+  /* smaller tablets */
+  .flexboxItemsContainer {
+    font-size: 12px;
+  }
+}
+
+@media screen and (min-width: 700px) {
+  /* tablets */
+  #root {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media screen and (min-width: 960px) {
+  /* desktops */
+  .input {
+    width: 10%;
+  }
+  .select {
+    width: 40%;
+  }
+  .display {
+    width: 50%;
+  }
+}
+
+@media screen and (min-width: 1000px) {
+  /* large screens */
+  #root {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  header {
+    display: flex;
+    flex-wrap: nowrap;
+    height: 60px;
+  }
+}
+
+@media screen and (max-width: 1136px) and (min-width: 1000px) {
+  .paragraph {
+    font-size: 12px;
+  }
+}
+
+@media screen and (min-width: 1500px) {
+  /* extra large screens */
+  #root {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
 }

@@ -3,17 +3,54 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>TV Show Project | My Name (My GitHub username)</title>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>TV Show Project | Laura Menendez (Laura-TM)</title>
+    <!-- main css -->
     <link href="style.css" rel="stylesheet" />
-    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+    <link rel="icon" href="favicon.ico" type="image/x-icon" />
+    <!-- font family -->
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Play&display=swap"
+      rel="stylesheet"
+    />
+    <!-- font awesome -->
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
+    />
   </head>
 
   <body>
-    <div id="root">
-    </div>
+    <!-- input search and dropdown lists -->
+    <header></header>
+    <figure>
+      <!-- button to return to all shows -->
+      <a href="#" class="floatHomeButton">
+        <i class="fa fa-home fa-2x my-float-home-button" aria-hidden="true"></i>
+      </a>
+      <!-- Scroll to bottom / top -->
+      <button id="scrollToTopButton" hidden="true">&#9757;</button>
+      <button id="scrollToBottomButton" hidden="true">&#x1F447;</button>
+    </figure>
+    <!-- actual content of episodes or shows -->
+    <main id="root"></main>
+    <!-- copyright -->
+    <footer>
+      <small>
+        All data is provided by
+        <a href="https://www.tvmaze.com/api#licensing" target="_blank"
+          >TV Maze</a
+        >
+      </small>
+    </footer>
 
-    <!-- Loads a provided function called getAllEpisodes() which returns all episodes -->
-    <script src="episodes.js"></script>
+    <!-- Loads a provided function called getAllShows() which returns all shows -->
+    <script src="shows.js"></script>
 
     <!-- Loads YOUR javascript code -->
     <script src="script.js"></script>
